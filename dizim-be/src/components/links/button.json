@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_links_buttons",
+  "info": {
+    "displayName": "Button"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string",
+      "default": "Click me",
+      "required": true
+    },
+    "href": {
+      "type": "string",
+      "default": "#"
+    },
+    "button_style": {
+      "type": "enumeration",
+      "enum": [
+        "Text",
+        "Filled",
+        "Ghost",
+        "Shaded"
+      ]
+    },
+    "color": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

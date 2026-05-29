@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_blocks_shows_sections",
+  "info": {
+    "displayName": "Shows section",
+    "icon": "handHeart"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "unique": false
+    },
+    "description": {
+      "type": "text"
+    },
+    "cta": {
+      "type": "component",
+      "component": "links.button",
+      "repeatable": false
+    },
+    "shows": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::show.show"
+    }
+  },
+  "config": {}
+}

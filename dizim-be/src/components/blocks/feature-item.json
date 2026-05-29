@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_blocks_feature_items",
+  "info": {
+    "displayName": "Feature Item",
+    "icon": "bulletList"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "icon": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "button": {
+      "type": "component",
+      "component": "links.button",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}
