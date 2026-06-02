@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lead_notes",
+  "info": {
+    "singularName": "lead-note",
+    "pluralName": "lead-notes",
+    "displayName": "Lead Note",
+    "description": "Internal notes attached to leads"
+  },
+  "options": {
+    "draftAndPublish": false,
+    "timestamps": true
+  },
+  "attributes": {
+    "lead": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::lead.lead",
+      "inversedBy": "notes",
+      "required": true,
+      "configurable": false
+    },
+    "note": {
+      "type": "text",
+      "required": true,
+      "configurable": false
+    },
+    "created_by": {
+      "type": "string",
+      "maxLength": 255,
+      "configurable": false
+    }
+  }
+}

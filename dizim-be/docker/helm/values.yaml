@@ -1,0 +1,26 @@
+appName: dizim-lead
+
+domain: api.dizim.ai
+
+replicas: 2
+
+image:
+  repository: gcr.io/dizim-ai/lead-management
+  tag: latest
+  pullPolicy: Always
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+autoscaling:
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+exportStorageSize: 10Gi

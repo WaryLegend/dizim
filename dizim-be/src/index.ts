@@ -1,20 +1,36 @@
-// import type { Core } from '@strapi/strapi';
+import { getEventBus, InMemoryEventBus, setEventBus } from './events';
+import { leadQualificationQueue, newsletterQueue, notificationQueue } from './queues';
 
 export default {
-  /**
-   * An asynchronous register function that runs before
-   * your application is initialized.
-   *
-   * This gives you an opportunity to extend code.
-   */
-  register(/* { strapi }: { strapi: Core.Strapi } */) {},
+  async register({ strapi }: { strapi: any }) {
+    const eventBus = new InMemoryEventBus();
+    setEventBus(eventBus);
+    console.log('[Dizim Lead] Event bus initialized');
+  },
 
-  /**
-   * An asynchronous bootstrap function that runs before
-   * your application gets started.
-   *
-   * This gives you an opportunity to set up your data model,
-   * run jobs, or perform some special logic.
-   */
-  bootstrap(/* { strapi }: { strapi: Core.Strapi } */) {},
+  async bootstrap({ strapi }: { strapi: any }) {
+    const eventBus = getEventBus();
+
+    eventBus.subscribe('lead:created', async (payload) => {
+      await leadQualificationQueue.add('qualify', { leadId: payload.leadId });
+    });
+
+    eventBus.subscribe('lead:hot', async (payload) => {
+      await notificationQueue.add('alert', {
+        leadId: payload.leadId, leadName: payload.fullName,
+        leadScore: payload.leadScore, leadLevel: payload.leadLevel,
+        summary: payload.summary, email: payload.email,
+      });
+    });
+
+    eventBus.subscribe('newsletter:subscribed', async (payload) => {
+      await newsletterQueue.add('welcome', {
+        email: payload.email, subscriberId: payload.subscriberId,
+      }, { attempts: 3, backoff: { type: 'exponential', delay: 1000 } });
+    });
+
+    const { startWorkers } = await import('./workers');
+    startWorkers();
+    console.log('[Dizim Lead] Module bootstrapped successfully');
+  },
 };

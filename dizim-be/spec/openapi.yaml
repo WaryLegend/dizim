@@ -1,0 +1,628 @@
+openapi: "3.1.0"
+info:
+  title: Dizim AI Lead Management API
+  version: "1.0.0"
+  description: Lead management and qualification API for Dizim AI platform
+  contact:
+    name: Dizim AI Team
+    email: dev@dizim.ai
+
+servers:
+  - url: https://api.dizim.ai
+    description: Production server
+  - url: http://localhost:1337
+    description: Development server
+
+paths:
+  /api/leads/contact:
+    post:
+      tags: [Leads]
+      summary: Submit a contact request
+      operationId: submitContact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactRequest'
+      responses:
+        '201':
+          description: Contact request created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+
+  /api/leads/demo:
+    post:
+      tags: [Leads]
+      summary: Submit a demo request
+      operationId: requestDemo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DemoRequest'
+      responses:
+        '201':
+          description: Demo request created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+
+  /api/leads/chatbot:
+    post:
+      tags: [Leads]
+      summary: Submit a chatbot lead
+      operationId: submitChatbotLead
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatbotLeadRequest'
+      responses:
+        '201':
+          description: Chatbot lead created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+
+  /api/leads/cta:
+    post:
+      tags: [Leads]
+      summary: Submit a CTA lead
+      operationId: submitCtaLead
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CtaLeadRequest'
+      responses:
+        '201':
+          description: CTA lead created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+
+  /api/leads:
+    get:
+      tags: [Leads - Admin]
+      summary: List all leads
+      operationId: listLeads
+      parameters:
+        - name: source_type
+          in: query
+          schema:
+            $ref: '#/components/schemas/SourceType'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/LeadStatus'
+        - name: lead_level
+          in: query
+          schema:
+            $ref: '#/components/schemas/LeadLevel'
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: _start
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: _limit
+          in: query
+          schema:
+            type: integer
+            default: 25
+      responses:
+        '200':
+          description: List of leads
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Lead'
+
+  /api/leads/{id}:
+    get:
+      tags: [Leads - Admin]
+      summary: Get a lead by ID
+      operationId: getLead
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lead details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Lead'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Leads - Admin]
+      summary: Update a lead
+      operationId: updateLead
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLeadRequest'
+      responses:
+        '200':
+          description: Lead updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Lead'
+    delete:
+      tags: [Leads - Admin]
+      summary: Soft delete a lead
+      operationId: deleteLead
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Lead deleted
+
+  /api/leads/{id}/notes:
+    post:
+      tags: [Leads - Admin]
+      summary: Add a note to a lead
+      operationId: addLeadNote
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [note]
+              properties:
+                note:
+                  type: string
+                  description: Internal note content
+      responses:
+        '201':
+          description: Note added
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  /api/leads/{id}/requalify:
+    post:
+      tags: [Leads - Admin]
+      summary: Re-qualify a lead using AI
+      operationId: requalifyLead
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lead re-qualified
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Lead'
+
+  /api/leads/{id}/mark-spam:
+    post:
+      tags: [Leads - Admin]
+      summary: Mark a lead as spam
+      operationId: markLeadAsSpam
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lead marked as spam
+
+  /api/leads/export:
+    post:
+      tags: [Leads - Export]
+      summary: Start an async CSV export
+      operationId: startLeadExport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportRequest'
+      responses:
+        '202':
+          description: Export job created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jobId:
+                    type: string
+                    example: exp_a1b2c3d4e5f6
+
+  /api/leads/export/{jobId}:
+    get:
+      tags: [Leads - Export]
+      summary: Get export job status
+      operationId: getExportStatus
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Export job status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jobId:
+                    type: string
+                  status:
+                    type: string
+                    enum: [pending, processing, completed, failed]
+                  downloadUrl:
+                    type: string
+                    nullable: true
+                  createdAt:
+                    type: string
+                    format: date-time
+                  completedAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+
+  /api/leads/export/download/{jobId}:
+    get:
+      tags: [Leads - Export]
+      summary: Download exported CSV
+      operationId: downloadExport
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: CSV file download
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+
+  /api/newsletter/subscribe:
+    post:
+      tags: [Newsletter]
+      summary: Subscribe to newsletter
+      operationId: subscribeNewsletter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                source:
+                  type: string
+                  example: website
+      responses:
+        '201':
+          description: Subscribed successfully
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+
+  /api/newsletter/unsubscribe:
+    post:
+      tags: [Newsletter]
+      summary: Unsubscribe from newsletter
+      operationId: unsubscribeNewsletter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Unsubscribed successfully
+
+components:
+  schemas:
+    SourceType:
+      type: string
+      enum: [contact, demo, chatbot, cta]
+      description: Lead source type
+
+    LeadStatus:
+      type: string
+      enum: [new, processing, resolved, spam]
+      description: Lead processing status
+
+    LeadLevel:
+      type: string
+      enum: [cold, warm, hot]
+      description: Lead qualification level
+
+    ContactRequest:
+      type: object
+      required: [full_name, email]
+      properties:
+        full_name:
+          type: string
+          maxLength: 255
+          example: John Doe
+        email:
+          type: string
+          format: email
+          example: john@example.com
+        phone:
+          type: string
+          example: "+84123456789"
+        company:
+          type: string
+          example: Acme Corp
+        inquiry_type:
+          type: string
+          example: Partnership
+        message:
+          type: string
+          example: I am interested in your livestream commerce platform
+
+    DemoRequest:
+      type: object
+      required: [full_name, email]
+      properties:
+        full_name:
+          type: string
+          maxLength: 255
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        company:
+          type: string
+        expected_platform:
+          type: string
+          example: TikTok Shop
+        monthly_orders:
+          type: integer
+          minimum: 0
+          example: 500
+        message:
+          type: string
+
+    ChatbotLeadRequest:
+      type: object
+      required: [full_name, email]
+      properties:
+        full_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        message:
+          type: string
+
+    CtaLeadRequest:
+      type: object
+      required: [full_name, email]
+      properties:
+        full_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        company:
+          type: string
+        message:
+          type: string
+
+    UpdateLeadRequest:
+      type: object
+      properties:
+        full_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        company:
+          type: string
+        status:
+          $ref: '#/components/schemas/LeadStatus'
+        lead_score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        lead_level:
+          $ref: '#/components/schemas/LeadLevel'
+        ai_summary:
+          type: string
+
+    ExportRequest:
+      type: object
+      properties:
+        source_type:
+          $ref: '#/components/schemas/SourceType'
+        status:
+          $ref: '#/components/schemas/LeadStatus'
+        lead_level:
+          $ref: '#/components/schemas/LeadLevel'
+        from_date:
+          type: string
+          format: date
+          example: "2026-01-01"
+        to_date:
+          type: string
+          format: date
+          example: "2026-12-31"
+
+    Lead:
+      type: object
+      properties:
+        id:
+          type: integer
+        source_type:
+          $ref: '#/components/schemas/SourceType'
+        full_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          nullable: true
+        company:
+          type: string
+          nullable: true
+        inquiry_type:
+          type: string
+          nullable: true
+        expected_platform:
+          type: string
+          nullable: true
+        monthly_orders:
+          type: integer
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/LeadStatus'
+        lead_score:
+          type: integer
+          nullable: true
+        lead_level:
+          $ref: '#/components/schemas/LeadLevel'
+        ai_summary:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    LeadResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Lead'
+        message:
+          type: string
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+
+  responses:
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimitError:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              retryAfter:
+                type: integer
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

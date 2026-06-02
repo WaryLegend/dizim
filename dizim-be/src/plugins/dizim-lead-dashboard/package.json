@@ -1,0 +1,12 @@
+{
+  "name": "dizim-lead-dashboard",
+  "version": "1.0.0",
+  "description": "Lead management dashboard plugin for Dizim AI",
+  "strapi": {
+    "name": "dizim-lead-dashboard",
+    "description": "Lead management dashboard plugin for Dizim AI",
+    "kind": "plugin"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

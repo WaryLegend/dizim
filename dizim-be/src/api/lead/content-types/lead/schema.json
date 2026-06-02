@@ -1,0 +1,101 @@
+{
+  "kind": "collectionType",
+  "collectionName": "leads",
+  "info": {
+    "singularName": "lead",
+    "pluralName": "leads",
+    "displayName": "Lead",
+    "description": "Centralized lead entity for all lead sources"
+  },
+  "options": {
+    "draftAndPublish": false,
+    "timestamps": true,
+    "softDelete": true
+  },
+  "attributes": {
+    "source_type": {
+      "type": "enumeration",
+      "enum": ["contact", "demo", "chatbot", "cta"],
+      "required": true,
+      "configurable": false
+    },
+    "full_name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255,
+      "configurable": false
+    },
+    "email": {
+      "type": "email",
+      "required": true,
+      "maxLength": 255,
+      "configurable": false
+    },
+    "phone": {
+      "type": "string",
+      "maxLength": 50,
+      "configurable": false
+    },
+    "company": {
+      "type": "string",
+      "maxLength": 255,
+      "configurable": false
+    },
+    "inquiry_type": {
+      "type": "string",
+      "maxLength": 100,
+      "configurable": false
+    },
+    "expected_platform": {
+      "type": "string",
+      "maxLength": 100,
+      "configurable": false
+    },
+    "monthly_orders": {
+      "type": "integer",
+      "configurable": false
+    },
+    "message": {
+      "type": "text",
+      "configurable": false
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["new", "processing", "resolved", "spam"],
+      "default": "new",
+      "required": true,
+      "configurable": false
+    },
+    "lead_score": {
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "configurable": false
+    },
+    "lead_level": {
+      "type": "enumeration",
+      "enum": ["cold", "warm", "hot"],
+      "configurable": false
+    },
+    "ai_summary": {
+      "type": "text",
+      "configurable": false
+    },
+    "activities": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::lead-activity.lead-activity",
+      "mappedBy": "lead"
+    },
+    "notes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::lead-note.lead-note",
+      "mappedBy": "lead"
+    },
+    "deleted_at": {
+      "type": "datetime",
+      "configurable": false
+    }
+  }
+}

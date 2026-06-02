@@ -1,0 +1,47 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lead_activities",
+  "info": {
+    "singularName": "lead-activity",
+    "pluralName": "lead-activities",
+    "displayName": "Lead Activity",
+    "description": "Audit trail for lead changes"
+  },
+  "options": {
+    "draftAndPublish": false,
+    "timestamps": true
+  },
+  "attributes": {
+    "lead": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::lead.lead",
+      "inversedBy": "activities",
+      "required": true,
+      "configurable": false
+    },
+    "action": {
+      "type": "enumeration",
+      "enum": ["lead_created", "lead_qualified", "lead_requalified", "status_changed", "marked_spam", "notes_added", "lead_exported"],
+      "required": true,
+      "configurable": false
+    },
+    "previous_value": {
+      "type": "json",
+      "configurable": false
+    },
+    "new_value": {
+      "type": "json",
+      "configurable": false
+    },
+    "performed_by": {
+      "type": "string",
+      "maxLength": 255,
+      "configurable": false
+    },
+    "metadata": {
+      "type": "json",
+      "configurable": false
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "kind": "collectionType",
+  "collectionName": "newsletter_subscribers",
+  "info": {
+    "singularName": "newsletter-subscriber",
+    "pluralName": "newsletter-subscribers",
+    "displayName": "Newsletter Subscriber",
+    "description": "Newsletter subscription management"
+  },
+  "options": {
+    "draftAndPublish": false,
+    "timestamps": true
+  },
+  "attributes": {
+    "email": {
+      "type": "email",
+      "required": true,
+      "unique": true,
+      "maxLength": 255,
+      "configurable": false
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["active", "unsubscribed"],
+      "default": "active",
+      "required": true,
+      "configurable": false
+    },
+    "source": {
+      "type": "string",
+      "maxLength": 100,
+      "configurable": false
+    },
+    "subscribed_at": {
+      "type": "datetime",
+      "configurable": false
+    },
+    "unsubscribed_at": {
+      "type": "datetime",
+      "configurable": false
+    }
+  }
+}
