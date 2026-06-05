@@ -1,13 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getGlobal } from "@/services/global.api";
+import { type Locale } from "@/i18n/routing";
 
 export default async function AuthLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: Locale }>;
 }) {
-  const global = await getGlobal();
+  const { locale } = await params;
+  const global = await getGlobal(locale);
   const bg = global.data.auth_background;
 
   return (

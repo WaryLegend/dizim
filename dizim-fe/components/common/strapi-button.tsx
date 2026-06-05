@@ -34,45 +34,46 @@ export default function StrapiButton({
   const activeHref = href ?? button?.href;
 
   const baseClasses =
-    "inline-flex w-fit items-center gap-2 text-sm font-semibold cursor-pointer transition-all disabled:cursor-not-allowed disabled:opacity-50";
+    "inline-flex w-fit items-center gap-2 text-sm font-semibold cursor-pointer transition-all duration-250 disabled:cursor-not-allowed disabled:opacity-50 shrink-0";
 
-  let internalStyle: React.CSSProperties = {};
   let variantClasses = "";
 
+  // Lưu ý: Trong các cú pháp [...] của Tailwind, dấu cách (space) phải được thay bằng dấu gạch dưới (_)
   switch (activeVariant) {
     case "Text":
-      variantClasses = "bg-transparent hover:not-disabled:underline";
-      internalStyle = { color: activeColor };
+      variantClasses =
+        "bg-transparent text-[var(--btn-color)] hover:not-disabled:underline";
       break;
 
     case "Filled":
+      // Hover nhạt hơn: Pha 85% màu gốc với màu trắng (white)
       variantClasses =
-        "rounded-full px-5 py-2 not-disabled:active:scale-95 shadow-sm";
-      internalStyle = { backgroundColor: activeColor, color: "#FFFFFF" };
+        "rounded-full px-5 py-2 text-white bg-[var(--btn-color)] hover:not-disabled:bg-[color-mix(in_srgb,var(--btn-color)_85%,white)] not-disabled:active:scale-95 shadow-sm";
       break;
 
     case "Ghost":
+      // Hover: Thêm một lớp nền mờ 10% của chính màu đó
       variantClasses =
-        "rounded-full border bg-transparent px-5 py-2 not-disabled:active:scale-95 shadow-sm";
-      internalStyle = { borderColor: activeColor, color: activeColor };
+        "rounded-full px-5 py-2 border border-[var(--btn-color)] text-[var(--btn-color)] bg-transparent hover:not-disabled:bg-[color-mix(in_srgb,var(--btn-color)_10%,transparent)] not-disabled:active:scale-95 shadow-sm";
       break;
 
     case "Shaded":
+      // Hover: Tăng độ đậm của nền từ 10% lên 20%
       variantClasses =
-        "rounded-full px-5 py-2 not-disabled:active:scale-95 shadow-sm";
-      internalStyle = {
-        backgroundColor: `color-mix(in srgb, ${activeColor} 10%, transparent)`,
-        color: activeColor,
-      };
+        "rounded-full px-5 py-2 bg-[color-mix(in_srgb,var(--btn-color)_10%,transparent)] text-[var(--btn-color)] hover:not-disabled:bg-[color-mix(in_srgb,var(--btn-color)_20%,transparent)] not-disabled:active:scale-95 shadow-sm";
       break;
 
     default:
-      variantClasses = "rounded-full";
-      internalStyle = { backgroundColor: DEFAULT_DARK, color: "#FFFFFF" };
+      variantClasses = "rounded-full bg-[var(--btn-color)] text-white";
   }
 
-  const combinedClassName = cn(`${baseClasses} ${variantClasses}`, className);
-  const mergedStyle = { ...internalStyle, ...externalStyle };
+  const combinedClassName = cn(`${baseClasses}`, variantClasses, className);
+
+  const mergedStyle = {
+    "--btn-color": activeColor,
+    ...externalStyle,
+  } as React.CSSProperties;
+
   const content = children || button?.text;
 
   if (activeHref) {

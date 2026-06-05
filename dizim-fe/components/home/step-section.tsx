@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { BlockStepSection } from "@/types/home-page";
 import { STRAPI_URL } from "@/lib/utils";
+import StrapiButton from "../common/strapi-button";
 
 export default function StepSection({
   heading,
@@ -23,12 +24,12 @@ export default function StepSection({
               <p className="text-muted-foreground text-lg">{description}</p>
             )}
             {cta && (
-              <Link
-                href={cta.href || "#"}
-                className="from-electric-violet border-electric-violet/30 shadow-4xl inline-flex shrink-0 items-center gap-2 rounded-full border-2 bg-transparent bg-linear-to-r to-rose-500 bg-clip-text px-5 py-2 text-sm font-semibold text-transparent transition-all hover:opacity-80 active:scale-95"
-              >
-                {cta.text}
-              </Link>
+              <>
+                <StrapiButton
+                  button={cta}
+                  className="border-rose text-rose hover:not-disabled:bg-rose/5 border"
+                />
+              </>
             )}
           </div>
         </div>

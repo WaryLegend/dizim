@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Button } from "@/components/shadcn-ui/button";
 import { ArrowRight, Calendar } from "lucide-react";
+import { Strait } from "next/font/google";
+import StrapiButton from "../common/strapi-button";
 
 const newsItems = [
   {
@@ -67,16 +69,14 @@ export default function NewsSection() {
         </div>
 
         <div className="text-center">
-          <Button
-            asChild
-            variant="outline"
-            className="border-electric-violet text-electric-violet hover:bg-electric-violet rounded-full px-8 hover:text-white"
+          <StrapiButton
+            href="/news"
+            variant="Ghost"
+            className="border-electric-violet text-electric-violet hover:bg-electric-violet rounded-full border active:scale-95"
           >
-            <Link href="/news">
-              View More
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+            View More
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </StrapiButton>
         </div>
       </div>
     </section>

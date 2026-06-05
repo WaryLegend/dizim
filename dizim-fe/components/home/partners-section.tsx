@@ -1,14 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getPartners } from "@/services/partner.api";
+import { type Locale } from "@/i18n/routing";
 import type { PartnerData } from "@/types/partner";
 import { STRAPI_URL } from "@/lib/utils";
 
-export default async function PartnersSection() {
+export default async function PartnersSection({ locale }: { locale: Locale }) {
   let partners: PartnerData[] = [];
 
   try {
-    const res = await getPartners();
+    const res = await getPartners(locale);
     partners = res.data;
   } catch {
     return null;

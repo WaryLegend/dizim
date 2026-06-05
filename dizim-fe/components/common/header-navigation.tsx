@@ -18,6 +18,13 @@ export default function HeaderNavigation({
 }: HeaderNavigationProps) {
   const pathname = usePathname();
 
+  const segments = pathname.split("/");
+  const normalizedPath = "/" + segments.slice(2).join("/");
+
+  const isActive = (href: string) =>
+    normalizedPath === href ||
+    (href !== "/" && normalizedPath.startsWith(href + "/"));
+
   if (!links?.length) return null;
 
   return (
@@ -29,7 +36,7 @@ export default function HeaderNavigation({
           className={cn(
             linkClassName,
             "text-sm font-medium transition-colors",
-            pathname === link.href
+            isActive(link.href)
               ? "text-rose"
               : "text-foreground/70 hover:text-foreground",
           )}

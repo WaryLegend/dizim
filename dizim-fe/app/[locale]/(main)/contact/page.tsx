@@ -146,7 +146,7 @@ export default function ContactPage() {
                     placeholder="Your Message *"
                     value={formData.message}
                     onChange={(e) => updateField("message", e.target.value)}
-                    className="min-h-[150px] resize-none rounded-lg"
+                    className="min-h-37.5 resize-none rounded-lg"
                     required
                   />
                   <Button
@@ -167,7 +167,7 @@ export default function ContactPage() {
                 </h2>
                 <div className="space-y-6">
                   <div className="flex items-start gap-4">
-                    <div className="bg-rose/10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl">
+                    <div className="bg-rose/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
                       <Mail className="text-rose h-6 w-6" />
                     </div>
                     <div>
@@ -183,7 +183,7 @@ export default function ContactPage() {
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
-                    <div className="bg-electric-violet/10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl">
+                    <div className="bg-electric-violet/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
                       <Phone className="text-electric-violet h-6 w-6" />
                     </div>
                     <div>
@@ -199,7 +199,7 @@ export default function ContactPage() {
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
-                    <div className="bg-azure-radiance/10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl">
+                    <div className="bg-azure-radiance/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
                       <Clock className="text-azure-radiance h-6 w-6" />
                     </div>
                     <div>
@@ -219,7 +219,7 @@ export default function ContactPage() {
                 </h2>
                 <div className="space-y-6">
                   <div className="flex items-start gap-4">
-                    <div className="bg-blue-gem/10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl">
+                    <div className="bg-blue-gem/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
                       <MapPin className="text-blue-gem h-6 w-6" />
                     </div>
                     <div>
@@ -232,7 +232,7 @@ export default function ContactPage() {
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
-                    <div className="bg-rose/10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl">
+                    <div className="bg-rose/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
                       <MapPin className="text-rose h-6 w-6" />
                     </div>
                     <div>
