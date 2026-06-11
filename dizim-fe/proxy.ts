@@ -22,13 +22,20 @@ export async function proxy(request: NextRequest) {
   const firstSegment = pathname.split("/")[1];
   const hasLocale = locales.includes(firstSegment);
 
-  if (!hasLocale) {
-    const locale = getPreferredLocale(request);
-    const target = `/${locale}${pathname === "/" ? "/home" : pathname}`;
-    return NextResponse.redirect(new URL(target, request.url));
+  if (hasLocale) {
+    const response = NextResponse.next();
+    response.cookies.set("NEXT_LOCALE", firstSegment, {
+      maxAge: 60 * 60 * 24 * 365,
+      path: "/",
+      sameSite: "lax",
+    });
+    return response;
   }
 
-  return NextResponse.next();
+  const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
+  const locale = cookieLocale || getPreferredLocale(request);
+  const target = `/${locale}${pathname === "/" ? "/home" : pathname}`;
+  return NextResponse.redirect(new URL(target, request.url));
 }
 
 export const config = {

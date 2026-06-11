@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLocale } from "next-intl";
 import { cn } from "@/lib/utils";
 import type { StrapiNavigationLink } from "@/types/global";
 
@@ -17,6 +18,7 @@ export default function HeaderNavigation({
   linkClassName,
 }: HeaderNavigationProps) {
   const pathname = usePathname();
+  const locale = useLocale();
 
   const segments = pathname.split("/");
   const normalizedPath = "/" + segments.slice(2).join("/");
@@ -29,21 +31,27 @@ export default function HeaderNavigation({
 
   return (
     <nav className={className}>
-      {links.map((link) => (
-        <Link
-          key={link.id}
-          href={link.href}
-          className={cn(
-            linkClassName,
-            "text-sm font-medium transition-colors",
-            isActive(link.href)
-              ? "text-rose"
-              : "text-foreground/70 hover:text-foreground",
-          )}
-        >
-          {link.name}
-        </Link>
-      ))}
+      {links.map((link) => {
+        const localizedHref = link.href.startsWith("/")
+          ? `/${locale}${link.href}`
+          : link.href;
+
+        return (
+          <Link
+            key={link.id}
+            href={localizedHref}
+            className={cn(
+              linkClassName,
+              "text-sm font-medium transition-colors",
+              isActive(link.href)
+                ? "text-rose"
+                : "text-foreground/70 hover:text-foreground",
+            )}
+          >
+            {link.name}
+          </Link>
+        );
+      })}
     </nav>
   );
 }
