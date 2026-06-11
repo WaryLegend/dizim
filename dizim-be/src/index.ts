@@ -5,6 +5,37 @@ export default {
   async register({ strapi }: { strapi: any }) {
     const eventBus = new InMemoryEventBus();
     setEventBus(eventBus);
+
+    // Password validation rules (apply to register, change-password, reset-password)
+    strapi.config.set('plugin::users-permissions.validationRules', {
+      validatePassword: async (password: string) => {
+        const errors: string[] = [];
+        if (!password || password.length < 8) {
+          errors.push('Mật khẩu phải có ít nhất 8 ký tự');
+        }
+        if (!/[A-Z]/.test(password)) {
+          errors.push('Mật khẩu phải có ít nhất 1 chữ hoa');
+        }
+        if (!/[a-z]/.test(password)) {
+          errors.push('Mật khẩu phải có ít nhất 1 chữ thường');
+        }
+        if (!/[0-9]/.test(password)) {
+          errors.push('Mật khẩu phải có ít nhất 1 số');
+        }
+        if (errors.length > 0) {
+          throw new Error(errors.join('. '));
+        }
+        return true;
+      },
+    });
+
+    // Rate limit for auth endpoints (login, register, forgot-password, etc.)
+    strapi.config.set('plugin::users-permissions.ratelimit', {
+      enabled: true,
+      interval: { min: 1 },
+      max: 5,
+    });
+
     console.log('[Dizim Lead] Event bus initialized');
   },
 
