@@ -75,21 +75,20 @@
         }
       }
     },
-    "cta": {
-      "type": "component",
+    "ctaText": {
+      "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "component": "links.button",
-      "repeatable": false
+      "default": "Get started"
     },
-    "bg_color": {
+    "ctaLink": {
       "type": "string",
       "pluginOptions": {
         "i18n": {
-          "localized": false
+          "localized": true
         }
       }
     }

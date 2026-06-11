@@ -2,6 +2,7 @@ import { getGlobal } from "@/services/global.api";
 import Header from "@/components/common/header";
 import CtaBlock from "@/components/common/cta-block";
 import Footer from "@/components/common/footer";
+import ChatAssistant from "@/components/common/ai-chatbox";
 
 export default async function MainLayout({
   children,
@@ -29,6 +30,7 @@ export default async function MainLayout({
         contact_phone={data.contact_phone}
         copyright={data.copyright}
       />
+      <ChatAssistant />
     </>
   );
 }

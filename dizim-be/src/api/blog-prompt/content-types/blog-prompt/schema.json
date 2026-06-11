@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "blog_prompts",
+  "info": {
+    "singularName": "blog-prompt",
+    "pluralName": "blog-prompts",
+    "displayName": "Blog_prompt"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "prompt_type": {
+      "type": "enumeration",
+      "enum": [
+        "outline",
+        "content"
+      ]
+    },
+    "system_prompt": {
+      "type": "text"
+    },
+    "user_template": {
+      "type": "text"
+    }
+  }
+}
