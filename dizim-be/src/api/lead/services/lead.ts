@@ -2,6 +2,11 @@ import { factories } from '@strapi/strapi';
 import { CreateLeadInput, UpdateLeadInput, LeadStatus, LeadLevel } from '../../../types';
 import { auditService } from '../../../services/audit';
 import { getEventBus } from '../../../events';
+import {
+  LeadValidationError,
+  SpamError,
+  LeadNotFoundError,
+} from '../errors';
 
 const LEAD_UID = 'api::lead.lead';
 
@@ -30,6 +35,10 @@ export default factories.createCoreService(LEAD_UID, ({ strapi }) => ({
       sourceType: sanitized.source_type,
       email: sanitized.email,
       fullName: sanitized.full_name,
+      phone: sanitized.phone,
+      company: sanitized.company,
+      inquiryType: sanitized.inquiry_type,
+      message: sanitized.message,
       createdAt: new Date().toISOString(),
     });
 
@@ -39,7 +48,7 @@ export default factories.createCoreService(LEAD_UID, ({ strapi }) => ({
   async updateLead(id: number, input: UpdateLeadInput): Promise<any> {
     const existing = await strapi.entityService.findOne(LEAD_UID, id);
     if (!existing) {
-      throw new Error('Lead not found');
+      throw new LeadNotFoundError();
     }
 
     const sanitized = sanitizeInput(input);
@@ -104,7 +113,7 @@ export default factories.createCoreService(LEAD_UID, ({ strapi }) => ({
 
   async markSpam(id: number, performedBy?: string): Promise<any> {
     const existing = await strapi.entityService.findOne(LEAD_UID, id);
-    if (!existing) throw new Error('Lead not found');
+    if (!existing) throw new LeadNotFoundError();
 
     const lead = await strapi.entityService.update(LEAD_UID, id, {
       data: {
@@ -151,19 +160,19 @@ function sanitizeString(value: string): string {
 
 function validateLeadInput(input: CreateLeadInput): void {
   if (!input.email || !isValidEmail(input.email)) {
-    throw new Error('INVALID_EMAIL');
+    throw new LeadValidationError('VALIDATION_EMAIL', 'Invalid email address');
   }
   if (input.phone && !isValidPhone(input.phone)) {
-    throw new Error('INVALID_PHONE');
+    throw new LeadValidationError('VALIDATION_PHONE', 'Invalid phone number');
   }
   if (!input.full_name || input.full_name.trim().length === 0) {
-    throw new Error('INVALID_NAME');
+    throw new LeadValidationError('VALIDATION_NAME', 'Full name is required');
   }
   if (!['contact', 'demo', 'chatbot', 'cta'].includes(input.source_type)) {
-    throw new Error('INVALID_SOURCE_TYPE');
+    throw new LeadValidationError('VALIDATION_SOURCE_TYPE', 'Invalid source type');
   }
   if (isSpam(input)) {
-    throw new Error('SPAM_DETECTED');
+    throw new SpamError();
   }
 }
 

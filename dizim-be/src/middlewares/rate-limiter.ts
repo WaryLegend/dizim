@@ -42,8 +42,11 @@ export function createRateLimitMiddleware(config: RateLimitConfig) {
         ctx.set('Retry-After', String(Math.ceil(ttl / 1000)));
         ctx.status = 429;
         ctx.body = {
-          error: config.message,
-          retryAfter: Math.ceil(ttl / 1000),
+          error: {
+            code: 'RATE_LIMITED',
+            success: false,
+            message: config.message,
+          },
         };
         return;
       }

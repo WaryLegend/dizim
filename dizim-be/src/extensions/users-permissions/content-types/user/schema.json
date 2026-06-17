@@ -65,6 +65,23 @@
       "target": "plugin::users-permissions.role",
       "inversedBy": "users",
       "configurable": false
+    },
+    "fullName": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255,
+      "configurable": false
+    },
+    "phone": {
+      "type": "string",
+      "maxLength": 20,
+      "configurable": false
+    },
+    "userType": {
+      "type": "enumeration",
+      "enum": ["individual", "sme_owner", "agency", "enterprise", "student", "other"],
+      "required": true,
+      "configurable": false
     }
   }
 }

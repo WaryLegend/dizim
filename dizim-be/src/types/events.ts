@@ -11,6 +11,10 @@ export interface LeadCreatedEvent {
   sourceType: string;
   email: string;
   fullName: string;
+  phone?: string;
+  company?: string;
+  inquiryType?: string;
+  message?: string;
   createdAt: string;
 }
 

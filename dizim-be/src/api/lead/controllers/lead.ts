@@ -1,6 +1,11 @@
 import { factories } from '@strapi/strapi';
 import { Context } from 'koa';
 import { CreateLeadInput, UpdateLeadInput, LeadExportFilters } from '../../../types';
+import {
+  LeadValidationError,
+  SpamError,
+  LeadNotFoundError,
+} from '../errors';
 
 const LEAD_SERVICE = 'api::lead.lead';
 const LEAD_NOTE_SERVICE = 'api::lead-note.lead-note';
@@ -13,9 +18,8 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
         ...(ctx.request.body as any),
         source_type: 'contact',
       };
-      const lead = await strapi.service(LEAD_SERVICE).createLead(input);
-      ctx.status = 201;
-      ctx.body = { data: lead, message: 'Contact request received successfully' };
+      await strapi.service(LEAD_SERVICE).createLead(input);
+      sendSuccess(ctx, 201, 'Contact request received successfully');
     } catch (error: any) {
       handleError(ctx, error);
     }
@@ -27,9 +31,8 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
         ...(ctx.request.body as any),
         source_type: 'demo',
       };
-      const lead = await strapi.service(LEAD_SERVICE).createLead(input);
-      ctx.status = 201;
-      ctx.body = { data: lead, message: 'Demo request received successfully' };
+      await strapi.service(LEAD_SERVICE).createLead(input);
+      sendSuccess(ctx, 201, 'Demo request received successfully');
     } catch (error: any) {
       handleError(ctx, error);
     }
@@ -41,9 +44,8 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
         ...(ctx.request.body as any),
         source_type: 'chatbot',
       };
-      const lead = await strapi.service(LEAD_SERVICE).createLead(input);
-      ctx.status = 201;
-      ctx.body = { data: lead, message: 'Chatbot lead received successfully' };
+      await strapi.service(LEAD_SERVICE).createLead(input);
+      sendSuccess(ctx, 201, 'Chatbot lead received successfully');
     } catch (error: any) {
       handleError(ctx, error);
     }
@@ -55,9 +57,8 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
         ...(ctx.request.body as any),
         source_type: 'cta',
       };
-      const lead = await strapi.service(LEAD_SERVICE).createLead(input);
-      ctx.status = 201;
-      ctx.body = { data: lead, message: 'CTA lead received successfully' };
+      await strapi.service(LEAD_SERVICE).createLead(input);
+      sendSuccess(ctx, 201, 'CTA lead received successfully');
     } catch (error: any) {
       handleError(ctx, error);
     }
@@ -83,7 +84,7 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
         limit: parseInt(query._limit as string) || 25,
       });
 
-      ctx.body = { data: leads };
+      ctx.body = { success: true, data: leads };
     } catch (error: any) {
       handleError(ctx, error);
     }
@@ -94,11 +95,10 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
       const { id } = ctx.params;
       const lead = await strapi.service(LEAD_SERVICE).findById(parseInt(id));
       if (!lead) {
-        ctx.status = 404;
-        ctx.body = { error: 'Lead not found' };
+        sendError(ctx, 404, 'NOT_FOUND', 'Lead not found');
         return;
       }
-      ctx.body = { data: lead };
+      ctx.body = { success: true, data: lead };
     } catch (error: any) {
       handleError(ctx, error);
     }
@@ -109,7 +109,7 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
       const { id } = ctx.params;
       const input: UpdateLeadInput = ctx.request.body as any;
       const lead = await strapi.service(LEAD_SERVICE).updateLead(parseInt(id), input);
-      ctx.body = { data: lead };
+      ctx.body = { success: true, data: lead };
     } catch (error: any) {
       handleError(ctx, error);
     }
@@ -130,8 +130,7 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
       const { id } = ctx.params;
       const { note } = ctx.request.body as any;
       if (!note) {
-        ctx.status = 400;
-        ctx.body = { error: 'Note is required' };
+        sendError(ctx, 400, 'VALIDATION_NOTE', 'Note is required');
         return;
       }
 
@@ -152,7 +151,7 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
       });
 
       ctx.status = 201;
-      ctx.body = { data: leadNote };
+      ctx.body = { success: true, data: leadNote };
     } catch (error: any) {
       handleError(ctx, error);
     }
@@ -165,7 +164,7 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
         parseInt(id),
         ctx.state?.user?.email || 'admin'
       );
-      ctx.body = { data: lead };
+      ctx.body = { success: true, data: lead };
     } catch (error: any) {
       handleError(ctx, error);
     }
@@ -176,8 +175,7 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
       const { id } = ctx.params;
       const lead = await strapi.service(LEAD_SERVICE).findById(parseInt(id));
       if (!lead) {
-        ctx.status = 404;
-        ctx.body = { error: 'Lead not found' };
+        sendError(ctx, 404, 'NOT_FOUND', 'Lead not found');
         return;
       }
 
@@ -205,42 +203,44 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
         previousLevel: lead.lead_level,
       });
 
-      ctx.body = { data: updated };
+      ctx.body = { success: true, data: updated };
     } catch (error: any) {
       handleError(ctx, error);
     }
   },
 }));
 
+/**
+ * Send a standardized success response.
+ */
+function sendSuccess(ctx: Context, status: number, message: string): void {
+  ctx.status = status;
+  ctx.body = { success: true, message };
+}
+
+/**
+ * Send a standardized error response.
+ */
+function sendError(ctx: Context, status: number, code: string, message: string): void {
+  ctx.status = status;
+  ctx.body = {
+    error: { code, success: false, message },
+  };
+}
+
+/**
+ * Map typed errors to standardized error responses.
+ * Checks error class/type rather than string-matching on message.
+ */
 function handleError(ctx: Context, error: any): void {
-  const message = error.message || 'Internal server error';
-  switch (message) {
-    case 'INVALID_EMAIL':
-      ctx.status = 400;
-      ctx.body = { error: 'Invalid email address' };
-      break;
-    case 'INVALID_PHONE':
-      ctx.status = 400;
-      ctx.body = { error: 'Invalid phone number' };
-      break;
-    case 'INVALID_NAME':
-      ctx.status = 400;
-      ctx.body = { error: 'Full name is required' };
-      break;
-    case 'INVALID_SOURCE_TYPE':
-      ctx.status = 400;
-      ctx.body = { error: 'Invalid source type' };
-      break;
-    case 'SPAM_DETECTED':
-      ctx.status = 400;
-      ctx.body = { error: 'Message flagged as spam' };
-      break;
-    case 'Lead not found':
-      ctx.status = 404;
-      ctx.body = { error: 'Lead not found' };
-      break;
-    default:
-      ctx.status = 500;
-      ctx.body = { error: 'Internal server error' };
+  if (error instanceof LeadValidationError) {
+    sendError(ctx, 400, error.code, error.message);
+  } else if (error instanceof SpamError) {
+    sendError(ctx, 400, 'SPAM_DETECTED', error.message);
+  } else if (error instanceof LeadNotFoundError) {
+    sendError(ctx, 404, 'NOT_FOUND', error.message);
+  } else {
+    console.error('[LeadController] Unhandled error:', error);
+    sendError(ctx, 500, 'INTERNAL_ERROR', 'Internal server error');
   }
 }

@@ -15,4 +15,14 @@ export interface NotificationProvider {
     leadLevel: string;
     summary: string;
   }): Promise<void>;
+  sendContactNotification(input: {
+    adminEmail: string;
+    fullName: string;
+    email: string;
+    phone?: string;
+    company?: string;
+    inquiryType?: string;
+    message?: string;
+    createdAt: string;
+  }): Promise<void>;
 }

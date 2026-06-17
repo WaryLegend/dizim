@@ -85,6 +85,32 @@ export class ResendNotificationProvider implements NotificationProvider {
     });
   }
 
+  async sendContactNotification(input: {
+    adminEmail: string;
+    fullName: string;
+    email: string;
+    phone?: string;
+    company?: string;
+    inquiryType?: string;
+    message?: string;
+    createdAt: string;
+  }): Promise<void> {
+    const text = [
+      `Inquiry Type: ${input.inquiryType || 'N/A'}`,
+      `Name: ${input.fullName}`,
+      `Email: ${input.email}`,
+      `Phone: ${input.phone || 'N/A'}`,
+      `Message: ${input.message || 'N/A'}`,
+      `Submitted: ${input.createdAt}`,
+    ].join('\n');
+    await this.send({
+      to: input.adminEmail,
+      subject: `[Dizim] New contact from ${input.fullName}`,
+      html: text.replace(/\n/g, '<br>'),
+      text,
+    });
+  }
+
   private async send(input: SendEmailInput): Promise<void> {
     await this.client.emails.send({
       from: input.from || this.fromEmail,

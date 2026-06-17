@@ -1,5 +1,8 @@
+import { errors } from '@strapi/utils';
 import { getEventBus, InMemoryEventBus, setEventBus } from './events';
 import { leadQualificationQueue, newsletterQueue, notificationQueue } from './queues';
+
+const { ValidationError } = errors;
 
 export default {
   async register({ strapi }: { strapi: any }) {
@@ -9,21 +12,21 @@ export default {
     // Password validation rules (apply to register, change-password, reset-password)
     strapi.config.set('plugin::users-permissions.validationRules', {
       validatePassword: async (password: string) => {
-        const errors: string[] = [];
+        const messages: string[] = [];
         if (!password || password.length < 8) {
-          errors.push('Mật khẩu phải có ít nhất 8 ký tự');
+          messages.push('Password must be at least 8 characters');
         }
         if (!/[A-Z]/.test(password)) {
-          errors.push('Mật khẩu phải có ít nhất 1 chữ hoa');
+          messages.push('Password must contain at least 1 uppercase letter');
         }
         if (!/[a-z]/.test(password)) {
-          errors.push('Mật khẩu phải có ít nhất 1 chữ thường');
+          messages.push('Password must contain at least 1 lowercase letter');
         }
         if (!/[0-9]/.test(password)) {
-          errors.push('Mật khẩu phải có ít nhất 1 số');
+          messages.push('Password must contain at least 1 number');
         }
-        if (errors.length > 0) {
-          throw new Error(errors.join('. '));
+        if (messages.length > 0) {
+          throw new ValidationError(messages.join('. '));
         }
         return true;
       },
@@ -44,6 +47,19 @@ export default {
 
     eventBus.subscribe('lead:created', async (payload) => {
       await leadQualificationQueue.add('qualify', { leadId: payload.leadId });
+
+      if (process.env.ADMIN_NOTIFY_EMAIL) {
+        await notificationQueue.add('contact-notification', {
+          leadId: payload.leadId,
+          fullName: payload.fullName,
+          email: payload.email,
+          phone: payload.phone,
+          company: payload.company,
+          inquiryType: payload.inquiryType,
+          message: payload.message,
+          createdAt: payload.createdAt,
+        });
+      }
     });
 
     eventBus.subscribe('lead:hot', async (payload) => {
