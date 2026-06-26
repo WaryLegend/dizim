@@ -1,35 +1,23 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/shadcn-ui/button";
 import { ArrowRight, Calendar } from "lucide-react";
+import { getLatestArticles } from "@/services/article.api";
+import type { ArticleData } from "@/types/article";
+import { STRAPI_URL } from "@/lib/utils";
 
-const newsItems = [
-  {
-    id: 1,
-    category: "Event",
-    date: "Dec 15, 2021",
-    title:
-      "HMT dizim.ai lot vao top 20 TechFest 2021 - Cuoc thi doi moi sang tao quoc gia",
-    gradient: "from-electric-violet to-azure-radiance",
-  },
-  {
-    id: 2,
-    category: "News",
-    date: "Dec 30, 2021",
-    title:
-      "Nen tang digital marketing HMT dizim.ai chinh thuc ra mat phien ban v3.0",
-    gradient: "from-rose to-electric-violet",
-  },
-  {
-    id: 3,
-    category: "Event",
-    date: "Jan 15, 2022",
-    title:
-      'Ra mat su kien "Cung chuc tan xuan Nham Dan 2022" - AI Speaker song dong',
-    gradient: "from-azure-radiance to-rose",
-  },
-];
+export default async function NewsSection() {
+  let articles: ArticleData[] = [];
 
-export default function NewsSection() {
+  try {
+    const res = await getLatestArticles(3);
+    articles = res.data;
+  } catch {
+    return null;
+  }
+
+  if (!articles.length) return null;
+
   return (
     <section className="bg-background py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -38,28 +26,35 @@ export default function NewsSection() {
         </h2>
 
         <div className="mb-12 grid gap-8 md:grid-cols-3">
-          {newsItems.map((item) => (
+          {articles.map((article) => (
             <article
-              key={item.id}
+              key={article.id}
               className="border-border overflow-hidden rounded-2xl border bg-white shadow-sm transition-shadow hover:shadow-lg"
             >
-              <div
-                className={`aspect-video bg-linear-to-br ${item.gradient} relative flex items-center justify-center`}
-              >
-                <span className="text-4xl">📰</span>
+              <div className="aspect-video relative flex items-center justify-center overflow-hidden bg-zinc-100">
+                {article.image ? (
+                  <Image
+                    src={`${STRAPI_URL}${article.image.url}`}
+                    alt={article.image.alternativeText || article.title}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <span className="text-4xl">📰</span>
+                )}
               </div>
               <div className="p-6">
                 <div className="mb-3 flex items-center gap-3">
                   <span className="text-rose text-xs font-semibold tracking-wider uppercase">
-                    {item.category}
+                    {article.category}
                   </span>
                   <span className="text-muted-foreground flex items-center gap-1 text-xs">
                     <Calendar className="h-3 w-3" />
-                    {item.date}
+                    {article.date}
                   </span>
                 </div>
                 <h3 className="text-foreground line-clamp-2 leading-snug font-semibold">
-                  {item.title}
+                  {article.title}
                 </h3>
               </div>
             </article>
