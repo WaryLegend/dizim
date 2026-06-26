@@ -24,6 +24,7 @@ export async function getArticles({
       pageSize,
     },
     locale: "en",
+    status: "published",
   });
 
   return fetchStrapi<ArticleResponse>(`${STRAPI_URL}/api/articles?${query}`);
