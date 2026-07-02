@@ -2,7 +2,7 @@ import { getGlobal } from "@/services/global.api";
 import Header from "@/components/common/header";
 import CtaBlock from "@/components/common/cta-block";
 import Footer from "@/components/common/footer";
-import ChatAssistant from "@/components/common/ai-chatbox";
+import ChatAssistant from "@/components/ai-assit/ai-chatbox";
 
 export default async function MainLayout({
   children,
