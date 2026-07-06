@@ -11,6 +11,9 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "session_id": {
+      "type": "string"
+    },
     "session_name": {
       "type": "string"
     },

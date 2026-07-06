@@ -511,62 +511,31 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiBlogPromptBlogPrompt extends Struct.CollectionTypeSchema {
-  collectionName: 'blog_prompts';
-  info: {
-    displayName: 'Blog_prompt';
-    pluralName: 'blog-prompts';
-    singularName: 'blog-prompt';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::blog-prompt.blog-prompt'
-    > &
-      Schema.Attribute.Private;
-    prompt_type: Schema.Attribute.Enumeration<['outline', 'content']>;
-    publishedAt: Schema.Attribute.DateTime;
-    system_prompt: Schema.Attribute.Text;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    user_template: Schema.Attribute.Text;
-  };
-}
-
-export interface ApiBotKnowledgeBotKnowledge
+export interface ApiChatBotDocumentChatBotDocument
   extends Struct.CollectionTypeSchema {
-  collectionName: 'bot_knowledges';
+  collectionName: 'chat_bot_documents';
   info: {
-    displayName: 'Bot_knowledge';
-    pluralName: 'bot-knowledges';
-    singularName: 'bot-knowledge';
+    displayName: 'Chat_bot_document';
+    pluralName: 'chat-bot-documents';
+    singularName: 'chat-bot-document';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    category: Schema.Attribute.Enumeration<['tu_van', 'gioi_thieu']>;
-    content: Schema.Attribute.Text;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::bot-knowledge.bot-knowledge'
+      'api::chat-bot-document.chat-bot-document'
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     source_file: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
+      'images' | 'files' | 'videos' | 'audios',
+      true
     >;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
@@ -590,8 +559,6 @@ export interface ApiChatBoxSettingChatBoxSetting
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    instruction_product: Schema.Attribute.Text;
-    instruction_support: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -601,6 +568,7 @@ export interface ApiChatBoxSettingChatBoxSetting
     logo: Schema.Attribute.Component<'elements.logo', false>;
     publishedAt: Schema.Attribute.DateTime;
     system_constraints: Schema.Attribute.Text;
+    system_instruction: Schema.Attribute.Text;
     theme_color: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -628,6 +596,7 @@ export interface ApiChatHistoryChatHistory extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    image_urls: Schema.Attribute.JSON;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -669,6 +638,7 @@ export interface ApiChatSessionChatSession extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    session_id: Schema.Attribute.String;
     session_name: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1601,8 +1571,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::article.article': ApiArticleArticle;
-      'api::blog-prompt.blog-prompt': ApiBlogPromptBlogPrompt;
-      'api::bot-knowledge.bot-knowledge': ApiBotKnowledgeBotKnowledge;
+      'api::chat-bot-document.chat-bot-document': ApiChatBotDocumentChatBotDocument;
       'api::chat-box-setting.chat-box-setting': ApiChatBoxSettingChatBoxSetting;
       'api::chat-history.chat-history': ApiChatHistoryChatHistory;
       'api::chat-session.chat-session': ApiChatSessionChatSession;

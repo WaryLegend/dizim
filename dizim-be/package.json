@@ -19,6 +19,8 @@
     "@strapi/plugin-cloud": "5.42.1",
     "@strapi/plugin-users-permissions": "5.42.1",
     "@strapi/strapi": "5.42.1",
+    "canvas": "^3.2.3",
+    "form-data": "^4.0.6",
     "fs": "^0.0.1-security",
     "mysql2": "3.20.0",
     "path": "^0.12.7",

@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "bot_knowledges",
+  "collectionName": "chat_bot_documents",
   "info": {
-    "singularName": "bot-knowledge",
-    "pluralName": "bot-knowledges",
-    "displayName": "Bot_knowledge"
+    "singularName": "chat-bot-document",
+    "pluralName": "chat-bot-documents",
+    "displayName": "Chat_bot_document"
   },
   "options": {
     "draftAndPublish": true
@@ -14,19 +14,9 @@
     "title": {
       "type": "string"
     },
-    "content": {
-      "type": "text"
-    },
-    "category": {
-      "type": "enumeration",
-      "enum": [
-        "tu_van",
-        "gioi_thieu"
-      ]
-    },
     "source_file": {
       "type": "media",
-      "multiple": false,
+      "multiple": true,
       "allowedTypes": [
         "images",
         "files",
