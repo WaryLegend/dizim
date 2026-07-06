@@ -6,7 +6,6 @@ import type { IChatMessage, ChatBoxSetting } from "@/types/chat";
 import ChatToggle from "./chat-toggle";
 import ChatHeader from "./chat-header";
 import ChatMessage from "./chat-message";
-import ChatModeSelector from "./chat-mode-selector";
 import ChatLoading from "./chat-loading";
 import ChatInput from "./chat-input";
 
@@ -21,10 +20,15 @@ function getInitialChatId(): number | undefined {
   return savedId ? Number(savedId) : undefined;
 }
 
+const greeting: IChatMessage = {
+  role: "model",
+  message:
+    "Xin chào! Tôi là trợ lý AI của Dizim. Bạn cần tôi hỗ trợ gì hôm nay?",
+};
+
 export default function ChatContainer({ settings }: ChatContainerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentMode, setCurrentMode] = useState<string | null>(null);
-  const [messages, setMessages] = useState<IChatMessage[]>([]);
+  const [messages, setMessages] = useState<IChatMessage[]>([greeting]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [chatId, setChatId] = useState<number | undefined>(getInitialChatId);
@@ -40,32 +44,11 @@ export default function ChatContainer({ settings }: ChatContainerProps) {
   // Tự động cuộn xuống cuối khi có tin nhắn mới
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, currentMode, isLoading, isOpen]);
-
-  const handleSelectMode = (selectedMode: "gioi_thieu" | "tu_van") => {
-    setCurrentMode(selectedMode);
-
-    const modeGreeting =
-      selectedMode === "gioi_thieu"
-        ? "Bạn muốn tìm hiểu thông tin hay tính năng gì về dịch vụ của chúng tôi?"
-        : "Bạn đang cần tư vấn chi tiết về các gói cước và giá cả phải không?";
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        role: "user",
-        message:
-          selectedMode === "gioi_thieu"
-            ? "Xem Giới thiệu sản phẩm"
-            : "Cần Tư vấn dịch vụ",
-      },
-      { role: "model", message: modeGreeting },
-    ]);
-  };
+  }, [messages, isLoading, isOpen]);
 
   const handleSend = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!input.trim() || isLoading || !currentMode) return;
+    if (!input.trim() || isLoading) return;
 
     const userMessage = input.trim();
     setInput("");
@@ -75,7 +58,7 @@ export default function ChatContainer({ settings }: ChatContainerProps) {
     try {
       const response = await sendChatMessage({
         message: userMessage,
-        mode: currentMode,
+        mode: "general",
         session_id: chatId,
       });
 
@@ -122,12 +105,6 @@ export default function ChatContainer({ settings }: ChatContainerProps) {
           {messages.map((msg, index) => (
             <ChatMessage key={index} message={msg} />
           ))}
-          {!currentMode && (
-            <ChatModeSelector
-              primaryColor={primaryColor}
-              onSelectMode={handleSelectMode}
-            />
-          )}
 
           {isLoading && <ChatLoading />}
           <div ref={chatEndRef} />
@@ -137,7 +114,6 @@ export default function ChatContainer({ settings }: ChatContainerProps) {
           input={input}
           onInput={setInput}
           onSubmit={handleSend}
-          disabled={!currentMode}
           isLoading={isLoading}
           primaryColor={primaryColor}
         />
