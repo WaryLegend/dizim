@@ -75,10 +75,7 @@ export default function FeatureSection({
                 {renderRichText(item.description)}
               </p>
               {item.button && (
-                <StrapiButton
-                  button={item.button}
-                  className="text-bold hover:underline"
-                >
+                <StrapiButton button={item.button}>
                   {item.button.text}
                   <ChevronRight className="h-4 w-4" />
                 </StrapiButton>

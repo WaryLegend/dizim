@@ -511,62 +511,31 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiBlogPromptBlogPrompt extends Struct.CollectionTypeSchema {
-  collectionName: 'blog_prompts';
-  info: {
-    displayName: 'Blog_prompt';
-    pluralName: 'blog-prompts';
-    singularName: 'blog-prompt';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::blog-prompt.blog-prompt'
-    > &
-      Schema.Attribute.Private;
-    prompt_type: Schema.Attribute.Enumeration<['outline', 'content']>;
-    publishedAt: Schema.Attribute.DateTime;
-    system_prompt: Schema.Attribute.Text;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    user_template: Schema.Attribute.Text;
-  };
-}
-
-export interface ApiBotKnowledgeBotKnowledge
+export interface ApiChatBotDocumentChatBotDocument
   extends Struct.CollectionTypeSchema {
-  collectionName: 'bot_knowledges';
+  collectionName: 'chat_bot_documents';
   info: {
-    displayName: 'Bot_knowledge';
-    pluralName: 'bot-knowledges';
-    singularName: 'bot-knowledge';
+    displayName: 'Chat_bot_document';
+    pluralName: 'chat-bot-documents';
+    singularName: 'chat-bot-document';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    category: Schema.Attribute.Enumeration<['tu_van', 'gioi_thieu']>;
-    content: Schema.Attribute.Text;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::bot-knowledge.bot-knowledge'
+      'api::chat-bot-document.chat-bot-document'
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     source_file: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
+      'images' | 'files' | 'videos' | 'audios',
+      true
     >;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
@@ -893,22 +862,21 @@ export interface ApiPricingPlanPricingPlan extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
+    bg_color: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    ctaLink: Schema.Attribute.String &
+    cta: Schema.Attribute.Component<'links.button', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
-    ctaText: Schema.Attribute.String &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }> &
-      Schema.Attribute.DefaultTo<'Get started'>;
     description: Schema.Attribute.Text &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -1602,8 +1570,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::article.article': ApiArticleArticle;
-      'api::blog-prompt.blog-prompt': ApiBlogPromptBlogPrompt;
-      'api::bot-knowledge.bot-knowledge': ApiBotKnowledgeBotKnowledge;
+      'api::chat-bot-document.chat-bot-document': ApiChatBotDocumentChatBotDocument;
       'api::chat-box-setting.chat-box-setting': ApiChatBoxSettingChatBoxSetting;
       'api::chat-history.chat-history': ApiChatHistoryChatHistory;
       'api::chat-session.chat-session': ApiChatSessionChatSession;

@@ -7,21 +7,20 @@ interface HeaderUserActionProps {
 
 export default function HeaderUserAction({
   className,
-  buttonClassName,
+  buttonClassName = "",
 }: HeaderUserActionProps) {
   return (
     <div className={className}>
       <StrapiButton
         variant="Ghost"
-        color="#0B0B0C"
         href="/signin"
-        className={`hover:bg-[#0B0B0C] hover:text-white! ${buttonClassName ?? ""}`}
+        className={`${buttonClassName}`}
       >
         Sign in
       </StrapiButton>
       <StrapiButton
         href="/signup"
-        className={`from-electric-violet to-rose bg-linear-to-r text-white hover:opacity-90 ${buttonClassName ?? ""}`}
+        className={`from-electric-violet to-rose bg-linear-to-r hover:brightness-90 ${buttonClassName}`}
       >
         Try for free
       </StrapiButton>

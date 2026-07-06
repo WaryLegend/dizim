@@ -1,4 +1,5 @@
 import { getHomePage } from "@/services/home-page.api";
+import { type Locale } from "@/i18n/routing";
 import HeroSection from "@/components/home/hero-section";
 import FeatureSection from "@/components/home/feature-section";
 import StepSection from "@/components/home/step-section";
@@ -29,8 +30,13 @@ function RenderBlock(block: HomePageBlock) {
   }
 }
 
-export default async function HomePage() {
-  const data = await getHomePage();
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale } = await params;
+  const data = await getHomePage(locale);
   const blocks = data.data.blocks;
 
   return (
