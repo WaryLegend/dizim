@@ -19,10 +19,7 @@
     "theme_color": {
       "type": "string"
     },
-    "instruction_support": {
-      "type": "text"
-    },
-    "instruction_product": {
+    "system_instruction": {
       "type": "text"
     },
     "system_constraints": {

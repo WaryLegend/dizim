@@ -590,8 +590,6 @@ export interface ApiChatBoxSettingChatBoxSetting
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    instruction_product: Schema.Attribute.Text;
-    instruction_support: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -601,6 +599,7 @@ export interface ApiChatBoxSettingChatBoxSetting
     logo: Schema.Attribute.Component<'elements.logo', false>;
     publishedAt: Schema.Attribute.DateTime;
     system_constraints: Schema.Attribute.Text;
+    system_instruction: Schema.Attribute.Text;
     theme_color: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -628,6 +627,7 @@ export interface ApiChatHistoryChatHistory extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    image_urls: Schema.Attribute.JSON;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -669,6 +669,7 @@ export interface ApiChatSessionChatSession extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    session_id: Schema.Attribute.String;
     session_name: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

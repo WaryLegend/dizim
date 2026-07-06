@@ -17,6 +17,9 @@
     "bot_response": {
       "type": "text"
     },
+    "image_urls": {
+      "type": "json"
+    },
     "prompt_tokens": {
       "type": "integer"
     },
