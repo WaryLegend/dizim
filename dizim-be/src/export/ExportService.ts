@@ -9,12 +9,13 @@ const EXPORT_DIR = process.env.EXPORT_DIR || path.join(process.cwd(), 'exports')
 const jobs = new Map<string, LeadExportJob>();
 
 export class ExportService {
-  async createExport(filters: LeadExportFilters): Promise<{ jobId: string }> {
+  async createExport(filters: LeadExportFilters, ownerId: number): Promise<{ jobId: string }> {
     const jobId = `exp_${uuidv4().replace(/-/g, '').substring(0, 12)}`;
 
     const job: LeadExportJob = {
       jobId,
       status: 'pending',
+      ownerId,
       createdAt: new Date(),
       filters,
     };
@@ -51,6 +52,10 @@ export class ExportService {
     if (job) {
       jobs.set(jobId, { ...job, ...update });
     }
+  }
+
+  getJob(jobId: string): LeadExportJob | null {
+    return jobs.get(jobId) || null;
   }
 
   getDownloadPath(jobId: string): string {

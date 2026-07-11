@@ -1,4 +1,5 @@
 import { Context } from 'koa';
+import { createReadStream } from 'fs';
 import { exportService } from '../../../export/ExportService';
 import { auditService } from '../../../services/audit';
 import { LeadExportFilters } from '../../../types';
@@ -15,7 +16,14 @@ export default {
         to_date: ctx.request.body?.to_date,
       };
 
-      const result = await exportService.createExport(filters);
+      const ownerId = getAuthenticatedUserId(ctx);
+      if (ownerId === null) {
+        ctx.status = 401;
+        ctx.body = { error: 'Authentication required' };
+        return;
+      }
+
+      const result = await exportService.createExport(filters, ownerId);
 
       await auditService.log({
         lead_id: 0,
@@ -36,9 +44,16 @@ export default {
   async status(ctx: Context): Promise<void> {
     try {
       const { jobId } = ctx.params;
+      const ownerId = getAuthenticatedUserId(ctx);
+      if (ownerId === null) {
+        ctx.status = 401;
+        ctx.body = { error: 'Authentication required' };
+        return;
+      }
+
       const job = await exportService.getExportStatus(jobId);
 
-      if (!job) {
+      if (!job || job.ownerId !== ownerId) {
         ctx.status = 404;
         ctx.body = { error: 'Export job not found' };
         return;
@@ -60,6 +75,20 @@ export default {
   async download(ctx: Context): Promise<void> {
     try {
       const { jobId } = ctx.params;
+      const ownerId = getAuthenticatedUserId(ctx);
+      if (ownerId === null) {
+        ctx.status = 401;
+        ctx.body = { error: 'Authentication required' };
+        return;
+      }
+
+      const job = exportService.getJob(jobId);
+      if (!job || job.ownerId !== ownerId) {
+        ctx.status = 404;
+        ctx.body = { error: 'Export job not found' };
+        return;
+      }
+
       const filePath = exportService.getDownloadPath(jobId);
 
       try {
@@ -72,10 +101,22 @@ export default {
 
       ctx.type = 'text/csv';
       ctx.set('Content-Disposition', `attachment; filename="leads-${jobId}.csv"`);
-      ctx.body = fs.createReadStream(filePath);
+      ctx.body = createReadStream(filePath);
     } catch (error: any) {
       ctx.status = 500;
       ctx.body = { error: 'Failed to download export' };
     }
   },
 };
+
+function getAuthenticatedUserId(ctx: Context): number | null {
+  const userId = ctx.state?.user?.id;
+  const normalizedUserId =
+    typeof userId === 'number'
+      ? userId
+      : typeof userId === 'string'
+        ? Number.parseInt(userId, 10)
+        : Number.NaN;
+
+  return Number.isInteger(normalizedUserId) ? normalizedUserId : null;
+}

@@ -46,7 +46,7 @@ export default {
       handler: 'lead.find',
       config: {
         auth: true,
-        policies: [],
+        policies: ['global::internal-role'],
       },
     },
     {
@@ -55,7 +55,7 @@ export default {
       handler: 'lead.findOne',
       config: {
         auth: true,
-        policies: [],
+        policies: ['global::internal-role'],
       },
     },
     {
@@ -64,7 +64,7 @@ export default {
       handler: 'lead.update',
       config: {
         auth: true,
-        policies: [],
+        policies: ['global::internal-role'],
       },
     },
     {
@@ -73,7 +73,7 @@ export default {
       handler: 'lead.delete',
       config: {
         auth: true,
-        policies: [],
+        policies: ['global::internal-role'],
       },
     },
     {
@@ -82,7 +82,7 @@ export default {
       handler: 'lead.addNote',
       config: {
         auth: true,
-        policies: [],
+        policies: ['global::internal-role'],
       },
     },
     {
@@ -91,7 +91,7 @@ export default {
       handler: 'lead.requalify',
       config: {
         auth: true,
-        policies: [],
+        policies: ['global::internal-role'],
       },
     },
     {
@@ -100,7 +100,7 @@ export default {
       handler: 'lead.markSpam',
       config: {
         auth: true,
-        policies: [],
+        policies: ['global::internal-role'],
       },
     },
     {
@@ -109,7 +109,7 @@ export default {
       handler: 'lead-export.create',
       config: {
         auth: true,
-        policies: [],
+        policies: ['global::internal-role'],
       },
     },
     {
@@ -118,7 +118,7 @@ export default {
       handler: 'lead-export.status',
       config: {
         auth: true,
-        policies: [],
+        policies: ['global::internal-role'],
       },
     },
     {
@@ -127,7 +127,7 @@ export default {
       handler: 'lead-export.download',
       config: {
         auth: true,
-        policies: [],
+        policies: ['global::internal-role'],
       },
     },
   ],

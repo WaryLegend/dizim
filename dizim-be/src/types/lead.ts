@@ -52,6 +52,7 @@ export interface CreateActivityInput {
 export interface LeadExportJob {
   jobId: string;
   status: 'pending' | 'processing' | 'completed' | 'failed';
+  ownerId: number;
   downloadUrl?: string;
   createdAt: Date;
   completedAt?: Date;

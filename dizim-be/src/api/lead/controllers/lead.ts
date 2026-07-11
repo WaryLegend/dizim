@@ -1,6 +1,7 @@
 import { factories } from '@strapi/strapi';
 import { Context } from 'koa';
 import { CreateLeadInput, UpdateLeadInput, LeadExportFilters } from '../../../types';
+import { pickPublicLeadCreateInput } from '../services/lead';
 import {
   LeadValidationError,
   SpamError,
@@ -15,9 +16,9 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
   async contact(ctx: Context): Promise<void> {
     try {
       const input: CreateLeadInput = {
-        ...(ctx.request.body as any),
+        ...(pickPublicLeadCreateInput(ctx.request.body) as Partial<CreateLeadInput>),
         source_type: 'contact',
-      };
+      } as CreateLeadInput;
       await strapi.service(LEAD_SERVICE).createLead(input);
       sendSuccess(ctx, 201, 'Contact request received successfully');
     } catch (error: any) {
@@ -28,9 +29,9 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
   async demo(ctx: Context): Promise<void> {
     try {
       const input: CreateLeadInput = {
-        ...(ctx.request.body as any),
+        ...(pickPublicLeadCreateInput(ctx.request.body) as Partial<CreateLeadInput>),
         source_type: 'demo',
-      };
+      } as CreateLeadInput;
       await strapi.service(LEAD_SERVICE).createLead(input);
       sendSuccess(ctx, 201, 'Demo request received successfully');
     } catch (error: any) {
@@ -41,9 +42,9 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
   async chatbot(ctx: Context): Promise<void> {
     try {
       const input: CreateLeadInput = {
-        ...(ctx.request.body as any),
+        ...(pickPublicLeadCreateInput(ctx.request.body) as Partial<CreateLeadInput>),
         source_type: 'chatbot',
-      };
+      } as CreateLeadInput;
       await strapi.service(LEAD_SERVICE).createLead(input);
       sendSuccess(ctx, 201, 'Chatbot lead received successfully');
     } catch (error: any) {
@@ -54,9 +55,9 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
   async cta(ctx: Context): Promise<void> {
     try {
       const input: CreateLeadInput = {
-        ...(ctx.request.body as any),
+        ...(pickPublicLeadCreateInput(ctx.request.body) as Partial<CreateLeadInput>),
         source_type: 'cta',
-      };
+      } as CreateLeadInput;
       await strapi.service(LEAD_SERVICE).createLead(input);
       sendSuccess(ctx, 201, 'CTA lead received successfully');
     } catch (error: any) {
@@ -192,7 +193,7 @@ export default factories.createCoreController(LEAD_SERVICE, ({ strapi }) => ({
         lead_score: result.leadScore,
         lead_level: result.leadLevel.toLowerCase() as any,
         ai_summary: result.summary,
-      });
+      }, { allowSystemFields: true });
 
       const { getEventBus } = await import('../../../events');
       getEventBus().emit('lead:requalified', {

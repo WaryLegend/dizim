@@ -1,4 +1,5 @@
 import { Context } from 'koa';
+import { LeadExportFilters } from '../../../../types';
 
 const LEAD_UID = 'api::lead.lead';
 const NOTE_UID = 'api::lead-note.lead-note';
@@ -99,14 +100,13 @@ export default {
       const { id } = ctx.params;
       const data = ctx.request.body as any;
 
-      const lead = await strapi.entityService.update(LEAD_UID, parseInt(id), {
-        data: { ...data, publishedAt: null },
-      });
+      const lead = await strapi.service(LEAD_UID).updateLead(parseInt(id), data);
 
       ctx.body = { data: lead };
     } catch (error: any) {
-      ctx.status = 500;
-      ctx.body = { error: 'Failed to update lead' };
+      const status = error?.name === 'LeadValidationError' ? 400 : error?.name === 'LeadNotFoundError' ? 404 : 500;
+      ctx.status = status;
+      ctx.body = { error: status === 500 ? 'Failed to update lead' : error.message };
     }
   },
 
@@ -194,10 +194,23 @@ export default {
 
   async export(ctx: Context): Promise<void> {
     try {
+      const ownerId = getAuthenticatedUserId(ctx);
+      if (ownerId === null) {
+        ctx.status = 401;
+        ctx.body = { error: 'Authentication required' };
+        return;
+      }
+
       const { ExportService } = await import('../../../export/ExportService');
       const exportService = new ExportService();
-      const filters = (ctx.request.body as any) || {};
-      const result = await exportService.createExport(filters);
+      const filters: LeadExportFilters = {
+        source_type: ctx.request.body?.source_type,
+        status: ctx.request.body?.status,
+        lead_level: ctx.request.body?.lead_level,
+        from_date: ctx.request.body?.from_date,
+        to_date: ctx.request.body?.to_date,
+      };
+      const result = await exportService.createExport(filters, ownerId);
       ctx.status = 202;
       ctx.body = { jobId: result.jobId };
     } catch (error: any) {
@@ -206,3 +219,15 @@ export default {
     }
   },
 };
+
+function getAuthenticatedUserId(ctx: Context): number | null {
+  const userId = ctx.state?.user?.id;
+  const normalizedUserId =
+    typeof userId === 'number'
+      ? userId
+      : typeof userId === 'string'
+        ? Number.parseInt(userId, 10)
+        : Number.NaN;
+
+  return Number.isInteger(normalizedUserId) ? normalizedUserId : null;
+}
