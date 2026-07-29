@@ -1,24 +1,25 @@
 import type { StrapiLogo } from "./global";
 
 export interface ChatRequest {
-  message: string;
-  mode: string;
-  session_id?: number;
+  chatInput: string;
+  session_id?: string | number;
 }
 
 export interface ChatResponse {
-  reply: string;
-  mode: string;
-  session_id?: number;
+  bot_response: string;
+  image_urls: string[];
+  session_id?: string;
+}
+
+export interface chatSession {
+  session_id: string | number;
+  session_name: string;
 }
 
 export interface ChatBoxSetting {
-  id: number;
-  documentId: string;
   logo: StrapiLogo;
   theme_color: string | null;
-  instruction_support: string;
-  instruction_product: string;
+  system_instruction: string;
   system_constraints: string;
 }
 
@@ -26,5 +27,6 @@ export interface IChatMessage {
   role: 'user' | 'model'; 
   message: string;        
   id?: string | number;   
-  createdAt?: string;    
+  createdAt?: string;  
+  image_urls?: string[];  
 }

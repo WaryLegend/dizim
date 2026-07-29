@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import StrapiButton from "@/components/common/strapi-button";
 import { Switch } from "@/components/shadcn-ui/switch";
 import { Star } from "lucide-react";
@@ -92,11 +92,7 @@ function getFeatureValue(plan: PricingPlanData, path: FeaturePath) {
 export default function PricingTable({ plans }: PricingTableProps) {
   const [isAnnual, setIsAnnual] = useState(true);
 
-  const orderedPlans = useMemo(() => {
-    return [...plans].sort((a, b) => a.id - b.id);
-  }, [plans]);
-
-  const columnStyles = orderedPlans.map((plan) => {
+  const columnStyles = plans.map((plan) => {
     return plan.bg_color ? { backgroundColor: plan.bg_color } : undefined;
   });
 
@@ -148,7 +144,7 @@ export default function PricingTable({ plans }: PricingTableProps) {
                     </div>
                   </th>
 
-                  {orderedPlans.map((plan, index) => (
+                  {plans.map((plan, index) => (
                     <th
                       key={plan.id}
                       className="min-w-45 px-4 py-4 text-center"
@@ -207,7 +203,7 @@ export default function PricingTable({ plans }: PricingTableProps) {
                           {category.category}
                         </h4>
                       </td>
-                      {orderedPlans.map((plan, index) => (
+                      {plans.map((plan, index) => (
                         <td
                           key={`${category.category}-${plan.id}`}
                           className="pt-8 pb-4"
@@ -219,7 +215,7 @@ export default function PricingTable({ plans }: PricingTableProps) {
                       <FeatureRow
                         key={`${category.category}-${item.label}`}
                         label={item.label}
-                        values={orderedPlans.map((plan) => {
+                        values={plans.map((plan) => {
                           return (getFeatureValue(plan, item.path) ?? "-") as
                             | string
                             | boolean;
@@ -232,7 +228,7 @@ export default function PricingTable({ plans }: PricingTableProps) {
 
                 <tr>
                   <td className="py-8"></td>
-                  {orderedPlans.map((plan, index) => (
+                  {plans.map((plan, index) => (
                     <td
                       key={`cta-${plan.id}`}
                       className="px-4 py-8 text-center"

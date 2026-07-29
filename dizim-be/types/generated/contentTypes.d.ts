@@ -592,7 +592,6 @@ export interface ApiChatHistoryChatHistory extends Struct.CollectionTypeSchema {
       'manyToOne',
       'api::chat-session.chat-session'
     >;
-    completion_tokens: Schema.Attribute.Integer;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -603,7 +602,6 @@ export interface ApiChatHistoryChatHistory extends Struct.CollectionTypeSchema {
       'api::chat-history.chat-history'
     > &
       Schema.Attribute.Private;
-    prompt_tokens: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -630,7 +628,6 @@ export interface ApiChatSessionChatSession extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    current_mode: Schema.Attribute.Enumeration<['tu_van', 'gioi_thieu']>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -865,7 +862,7 @@ export interface ApiPricingPlanPricingPlan extends Struct.CollectionTypeSchema {
     bg_color: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
-          localized: false;
+          localized: true;
         };
       }>;
     createdAt: Schema.Attribute.DateTime;

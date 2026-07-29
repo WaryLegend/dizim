@@ -1,3 +1,5 @@
+"use client";
+
 import type { IChatMessage } from "@/types/chat";
 import ReactMarkdown, { Components } from "react-markdown";
 import remarkBreaks from "remark-breaks";
@@ -50,12 +52,34 @@ export default function ChatMessage({ message }: ChatMessageProps) {
             : "rounded-bl-none bg-[#ECEFF3] font-normal text-[#334155]"
         }`}
       >
+        {/* Nội dung tin nhắn văn bản */}
         <ReactMarkdown
           remarkPlugins={[remarkBreaks]}
           components={markdownComponents}
         >
           {message.message}
         </ReactMarkdown>
+
+        {/* Hiển thị ảnh nếu có image_urls */}
+        {message.image_urls && message.image_urls.length > 0 && (
+          <div className="mt-3 grid grid-cols-1 gap-2">
+            {message.image_urls.map((url, idx) => (
+              <a 
+                key={idx} 
+                href={url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="block overflow-hidden rounded-lg border border-black/5 shadow-sm"
+              >
+                <img
+                  src={url}
+                  alt={`AI Result ${idx + 1}`}
+                  className="h-auto w-full object-contain transition-transform hover:scale-[1.02]"
+                />
+              </a>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

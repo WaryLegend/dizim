@@ -27,7 +27,9 @@ export default function ChatInput({
         value={input}
         onChange={(e) => onInput(e.target.value)}
         disabled={isLoading}
-        placeholder={"Nhập câu hỏi của bạn..."}
+        placeholder={
+          "Nhập câu hỏi của bạn..."
+        }
         className="field-sizing-content max-h-32 min-h-10 flex-1 resize-none overflow-y-auto rounded-[12px] border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-3 text-sm wrap-break-word whitespace-pre-wrap text-black transition-all focus:bg-white focus:outline-none disabled:opacity-60"
         style={{ borderColor: input ? primaryColor : "#E2E8F0" }}
       />

@@ -3,12 +3,9 @@ import type { ChatBoxSetting } from "@/types/chat";
 import ChatContainer from "./chat-container";
 
 const defaultSettings: ChatBoxSetting = {
-  id: 0,
-  documentId: "",
   logo: {} as ChatBoxSetting["logo"],
   theme_color: "#8B5CF6",
-  instruction_support: "",
-  instruction_product: "",
+  system_instruction: "",
   system_constraints: "",
 };
 

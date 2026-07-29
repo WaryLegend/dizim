@@ -17,13 +17,6 @@
     "session_name": {
       "type": "string"
     },
-    "current_mode": {
-      "type": "enumeration",
-      "enum": [
-        "tu_van",
-        "gioi_thieu"
-      ]
-    },
     "chat_histories": {
       "type": "relation",
       "relation": "oneToMany",
