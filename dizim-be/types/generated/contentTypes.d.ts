@@ -511,6 +511,138 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiChatBotDocumentChatBotDocument
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'chat_bot_documents';
+  info: {
+    displayName: 'Chat_bot_document';
+    pluralName: 'chat-bot-documents';
+    singularName: 'chat-bot-document';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::chat-bot-document.chat-bot-document'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    source_file: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiChatBoxSettingChatBoxSetting
+  extends Struct.SingleTypeSchema {
+  collectionName: 'chat_box_settings';
+  info: {
+    displayName: 'Chat Box Setting';
+    pluralName: 'chat-box-settings';
+    singularName: 'chat-box-setting';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::chat-box-setting.chat-box-setting'
+    > &
+      Schema.Attribute.Private;
+    logo: Schema.Attribute.Component<'elements.logo', false>;
+    publishedAt: Schema.Attribute.DateTime;
+    system_constraints: Schema.Attribute.Text;
+    system_instruction: Schema.Attribute.Text;
+    theme_color: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiChatHistoryChatHistory extends Struct.CollectionTypeSchema {
+  collectionName: 'chat_histories';
+  info: {
+    displayName: 'Chat_history';
+    pluralName: 'chat-histories';
+    singularName: 'chat-history';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    bot_response: Schema.Attribute.Text;
+    chat_session: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::chat-session.chat-session'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    image_urls: Schema.Attribute.JSON;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::chat-history.chat-history'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user_message: Schema.Attribute.Text;
+  };
+}
+
+export interface ApiChatSessionChatSession extends Struct.CollectionTypeSchema {
+  collectionName: 'chat_sessions';
+  info: {
+    displayName: 'Chat_session';
+    pluralName: 'chat-sessions';
+    singularName: 'chat-session';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    chat_histories: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::chat-history.chat-history'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::chat-session.chat-session'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    session_id: Schema.Attribute.String;
+    session_name: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   collectionName: 'globals';
   info: {
@@ -730,7 +862,7 @@ export interface ApiPricingPlanPricingPlan extends Struct.CollectionTypeSchema {
     bg_color: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
-          localized: false;
+          localized: true;
         };
       }>;
     createdAt: Schema.Attribute.DateTime;
@@ -889,6 +1021,35 @@ export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiToneOfVoiceToneOfVoice extends Struct.CollectionTypeSchema {
+  collectionName: 'tone_of_voices';
+  info: {
+    displayName: 'Tone_of_voice';
+    pluralName: 'tone-of-voices';
+    singularName: 'tone-of-voice';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::tone-of-voice.tone-of-voice'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    tone_name: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1406,12 +1567,17 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::article.article': ApiArticleArticle;
+      'api::chat-bot-document.chat-bot-document': ApiChatBotDocumentChatBotDocument;
+      'api::chat-box-setting.chat-box-setting': ApiChatBoxSettingChatBoxSetting;
+      'api::chat-history.chat-history': ApiChatHistoryChatHistory;
+      'api::chat-session.chat-session': ApiChatSessionChatSession;
       'api::global.global': ApiGlobalGlobal;
       'api::home-page.home-page': ApiHomePageHomePage;
       'api::partner.partner': ApiPartnerPartner;
       'api::pricing-plan.pricing-plan': ApiPricingPlanPricingPlan;
       'api::show.show': ApiShowShow;
       'api::testimonial.testimonial': ApiTestimonialTestimonial;
+      'api::tone-of-voice.tone-of-voice': ApiToneOfVoiceToneOfVoice;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

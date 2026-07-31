@@ -1,0 +1,29 @@
+{
+  "kind": "singleType",
+  "collectionName": "chat_box_settings",
+  "info": {
+    "singularName": "chat-box-setting",
+    "pluralName": "chat-box-settings",
+    "displayName": "Chat Box Setting"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "logo": {
+      "type": "component",
+      "component": "elements.logo",
+      "repeatable": false
+    },
+    "theme_color": {
+      "type": "string"
+    },
+    "system_instruction": {
+      "type": "text"
+    },
+    "system_constraints": {
+      "type": "text"
+    }
+  }
+}

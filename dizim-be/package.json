@@ -15,17 +15,25 @@
     "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },
   "dependencies": {
+    "@google/genai": "^2.8.0",
     "@strapi/plugin-cloud": "5.42.1",
     "@strapi/plugin-users-permissions": "5.42.1",
     "@strapi/strapi": "5.42.1",
+    "canvas": "^3.2.3",
+    "form-data": "^4.0.6",
+    "fs": "^0.0.1-security",
     "mysql2": "3.20.0",
+    "path": "^0.12.7",
+    "pdfjs-dist": "^3.11.174",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
-    "styled-components": "^6.0.0"
+    "styled-components": "^6.0.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/pdfjs-dist": "^2.10.377",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "typescript": "^5"

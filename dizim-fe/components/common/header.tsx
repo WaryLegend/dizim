@@ -1,8 +1,8 @@
-import { ChevronDown } from "lucide-react";
 import HeaderLogo from "./header-logo";
 import HeaderNavigation from "./header-navigation";
 import HeaderUserAction from "./header-user-action";
 import HeaderMenu from "./header-menu";
+import LanguageSwitcher from "./language-switcher";
 import type { StrapiLogo, StrapiNavigationLink } from "@/types/global";
 
 interface HeaderProps {
@@ -26,19 +26,13 @@ export default function Header({ logo, siteName, links }: HeaderProps) {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <button className="text-foreground/70 hover:text-foreground flex items-center gap-1 text-sm font-medium transition-colors">
-              EN
-              <ChevronDown className="h-3.5 w-3.5" />
-            </button>
+            <LanguageSwitcher />
 
             <HeaderUserAction className="hidden items-center gap-2 md:flex" />
 
             <HeaderMenu>
               <HeaderNavigation links={links} className="flex flex-col gap-4" />
-              <HeaderUserAction
-                className="flex flex-col gap-3 pt-4"
-                buttonClassName="w-full justify-center py-2.5"
-              />
+              <HeaderUserAction className="flex flex-col gap-3 pt-4" />
             </HeaderMenu>
           </div>
         </div>

@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "chat_bot_documents",
+  "info": {
+    "singularName": "chat-bot-document",
+    "pluralName": "chat-bot-documents",
+    "displayName": "Chat_bot_document"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "source_file": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  }
+}
